@@ -6,9 +6,12 @@ import pandas
 import datetime
 import time
 import urllib
+
+import databaseConfig
+print(databaseConfig.config['connect'])
 # import MySQLdb
 # 设置数据库参数
-engine = create_engine('mysql://root:4728999@127.0.0.1/WeCenter?charset=utf8')
+engine = create_engine(databaseConfig.config['connect'])
 # 表名字
 stockBasicInfoTable = 'icb_stock_code'
 # 当前日期
@@ -31,10 +34,13 @@ if (oldDate!= currentDate) :
         # 插入数据库中
         stockDataFrame.to_sql(stockBasicInfoTable, engine, if_exists='append')
         # 删除旧数据
-        sqlDeleteOldData = 'DELETE FROM ' + stockBasicInfoTable + ' WHERE belong_date <=DATE_SUB("' + currentDate + '", INTERVAL 5 DAY)'
+        sqlDeleteOldData = 'DELETE FROM ' + stockBasicInfoTable + ' WHERE belong_date <=DATE_SUB("' + currentDate + '", INTERVAL 1 YEAR)'
         dbConn.execute(sqlDeleteOldData)
         
     except urllib.error.HTTPError:
         pass
     
 exit
+
+
+
